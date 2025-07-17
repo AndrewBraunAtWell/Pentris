@@ -411,9 +411,8 @@ class PentrisGame {
     }
     
     render() {
-        // Clear canvas
-        this.ctx.fillStyle = '#000';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // Clear canvas with transparent background
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         if (this.gameOverScreen) {
             this.drawGameOverScreen();
@@ -634,8 +633,7 @@ class PentrisGame {
     }
     
     drawNextPiece() {
-        this.nextCtx.fillStyle = '#111';
-        this.nextCtx.fillRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
+        this.nextCtx.clearRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
         
         if (this.nextPiece) {
             const cellSize = 15;
