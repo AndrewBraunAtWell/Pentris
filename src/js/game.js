@@ -38,7 +38,7 @@ class PentrisGame {
         this.dropTimer = 0;
         this.dropInterval = 1000; // 1 second
         
-        // Pentomino shapes (all 12 standard pentominoes)
+        // Pentomino shapes (all 12 standard pentominoes) - carefully defined
         this.pentominoes = {
             'I': [
                 [1, 1, 1, 1, 1]
@@ -48,19 +48,17 @@ class PentrisGame {
                 [1, 1, 1, 1]
             ],
             'N': [
-                [0, 1, 0, 0],
                 [1, 1, 0, 0],
                 [0, 1, 1, 1]
             ],
             'P': [
-                [1, 1, 0],
-                [1, 1, 0],
-                [1, 0, 0]
+                [1, 1],
+                [1, 1],
+                [1, 0]
             ],
             'Y': [
                 [0, 1, 0, 0],
-                [1, 1, 0, 0],
-                [0, 1, 1, 1]
+                [1, 1, 1, 1]
             ],
             'T': [
                 [1, 1, 1],
@@ -113,6 +111,14 @@ class PentrisGame {
         return Array(this.GRID_HEIGHT).fill().map(() => Array(this.GRID_WIDTH).fill(0));
     }
     
+    getPieceWidth(shape) {
+        let maxWidth = 0;
+        for (let row of shape) {
+            maxWidth = Math.max(maxWidth, row.length);
+        }
+        return maxWidth;
+    }
+    
     setupEventListeners() {
         document.addEventListener('keydown', (e) => {
             if (!this.gameRunning || this.isPaused) return;
@@ -157,10 +163,13 @@ class PentrisGame {
     spawnNewPiece() {
         if (!this.nextPiece) this.generateNextPiece();
         
+        // Calculate the actual width of the piece
+        const pieceWidth = this.getPieceWidth(this.nextPiece.shape);
+        
         this.currentPiece = {
             shape: this.nextPiece.shape,
             color: this.nextPiece.color,
-            x: Math.floor(this.GRID_WIDTH / 2) - Math.floor(this.nextPiece.shape[0].length / 2),
+            x: Math.floor(this.GRID_WIDTH / 2) - Math.floor(pieceWidth / 2),
             y: 0
         };
         
@@ -321,6 +330,27 @@ class PentrisGame {
     }
     
     drawGrid() {
+        // Draw grid background and borders
+        this.ctx.strokeStyle = '#333';
+        this.ctx.lineWidth = 1;
+        
+        // // Draw vertical lines
+        for (let col = 0; col <= this.GRID_WIDTH; col++) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(col * this.CELL_SIZE, 0);
+            this.ctx.lineTo(col * this.CELL_SIZE, this.GRID_HEIGHT * this.CELL_SIZE);
+            this.ctx.stroke();
+        }
+        
+        // // Draw horizontal lines
+        for (let row = 0; row <= this.GRID_HEIGHT; row++) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, row * this.CELL_SIZE);
+            this.ctx.lineTo(this.GRID_WIDTH * this.CELL_SIZE, row * this.CELL_SIZE);
+            this.ctx.stroke();
+        }
+        
+        // Draw filled cells
         for (let row = 0; row < this.GRID_HEIGHT; row++) {
             for (let col = 0; col < this.GRID_WIDTH; col++) {
                 const color = this.grid[row][col];
