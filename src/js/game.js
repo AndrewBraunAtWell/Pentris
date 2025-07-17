@@ -151,6 +151,12 @@ class PentrisGame {
                 return;
             }
             
+            // Handle pause toggle first (before checking if game is paused)
+            if (e.key === 'p' || e.key === 'P') {
+                this.togglePause();
+                return;
+            }
+            
             if (!this.gameRunning || this.isPaused) return;
             
             switch(e.key) {
@@ -168,10 +174,6 @@ class PentrisGame {
                     break;
                 case ' ':
                     this.hardDrop();
-                    break;
-                case 'p':
-                case 'P':
-                    this.togglePause();
                     break;
             }
         });
