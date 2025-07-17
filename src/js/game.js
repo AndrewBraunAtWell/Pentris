@@ -435,8 +435,8 @@ class PentrisGame {
         if (this.isPaused) {
             this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.fillStyle = '#fff';
-            this.ctx.font = '24px Arial';
+            this.ctx.fillStyle = '#00ff00';
+            this.ctx.font = 'bold 32px "Orbitron", "Courier New", monospace';
             this.ctx.textAlign = 'center';
             this.ctx.fillText('PAUSED', this.canvas.width / 2, this.canvas.height / 2);
         }
