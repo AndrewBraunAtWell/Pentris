@@ -1,0 +1,55 @@
+{
+  "name": "pentris",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "concurrently \"electron .\" \"echo Dev mode started\"",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --publish=never"
+  },
+  "keywords": ["game", "puzzle", "tetris", "pentomino", "desktop"],
+  "author": "Andrew Braun",
+  "license": "MIT",
+  "description": "A Tetris-inspired puzzle game with pentominoes (5-square shapes)",
+  "devDependencies": {
+    "@types/node": "^24.0.14",
+    "concurrently": "^9.2.0",
+    "electron": "^37.2.3",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.5"
+  },
+  "dependencies": {
+    "howler": "^2.2.4",
+    "pixi.js": "^8.11.0"
+  },
+  "build": {
+    "appId": "com.pentris.game",
+    "productName": "Pentris",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  }
+}
