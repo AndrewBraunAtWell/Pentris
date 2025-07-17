@@ -38,7 +38,7 @@ class PentrisGame {
         this.dropTimer = 0;
         this.dropInterval = 1000; // 1 second
         
-        // Pentomino shapes (all 12 standard pentominoes) - carefully defined
+        // Pentomino shapes (all 17 pieces including mirrors) - carefully defined
         this.pentominoes = {
             'I': [
                 [1, 1, 1, 1, 1]
@@ -47,17 +47,34 @@ class PentrisGame {
                 [1, 0, 0, 0],
                 [1, 1, 1, 1]
             ],
+            'L_MIRROR': [
+                [0, 0, 0, 1],
+                [1, 1, 1, 1]
+            ],
             'N': [
                 [1, 1, 0, 0],
                 [0, 1, 1, 1]
+            ],
+            'N_MIRROR': [
+                [0, 0, 1, 1],
+                [1, 1, 1, 0]
             ],
             'P': [
                 [1, 1],
                 [1, 1],
                 [1, 0]
             ],
+            'P_MIRROR': [
+                [1, 1],
+                [1, 1],
+                [0, 1]
+            ],
             'Y': [
                 [0, 1, 0, 0],
+                [1, 1, 1, 1]
+            ],
+            'Y_MIRROR': [
+                [0, 0, 1, 0],
                 [1, 1, 1, 1]
             ],
             'T': [
@@ -92,6 +109,11 @@ class PentrisGame {
             'F': [
                 [0, 1, 1],
                 [1, 1, 0],
+                [0, 1, 0]
+            ],
+            'F_MIRROR': [
+                [1, 1, 0],
+                [0, 1, 1],
                 [0, 1, 0]
             ]
         };
