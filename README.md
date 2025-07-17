@@ -4,7 +4,7 @@ A Tetris-inspired puzzle game with a unique twist - using **pentominoes** (5-squ
 
 ## 🎯 Game Features
 
-- **12 Unique Pentomino Shapes**: All standard pentomino pieces (I, L, N, P, Y, T, U, V, W, X, Z, F)
+- **17 Unique Pentomino Shapes**: All standard pentomino pieces (I, L, N, P, Y, T, U, V, W, X, Z, F) plus 5 mirror pieces
 - **Classic Tetris Mechanics**: Line clearing, increasing difficulty, score system
 - **Smooth 60fps Gameplay**: Responsive controls and fluid animations
 - **Modern UI**: Clean interface with score tracking and next piece preview
