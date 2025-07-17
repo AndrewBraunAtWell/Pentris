@@ -175,6 +175,65 @@ class PentrisGame {
                     break;
             }
         });
+        
+        // Add mouse event listener for the canvas
+        this.canvas.addEventListener('click', (e) => {
+            if (this.gameOverScreen) {
+                this.handleGameOverClick(e);
+            }
+        });
+        
+        // Add mouse move listener for hover effects
+        this.canvas.addEventListener('mousemove', (e) => {
+            if (this.gameOverScreen) {
+                this.handleGameOverMouseMove(e);
+            }
+        });
+    }
+    
+    handleGameOverClick(e) {
+        // Get the canvas rectangle to calculate relative click position
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        // REPLAY button coordinates (same as in drawGameOverScreen)
+        const buttonX = this.canvas.width / 2 - 60;
+        const buttonY = 510;
+        const buttonWidth = 120;
+        const buttonHeight = 35;
+        
+        // Check if click is within the REPLAY button area
+        if (x >= buttonX && x <= buttonX + buttonWidth && 
+            y >= buttonY && y <= buttonY + buttonHeight) {
+            this.restartGame();
+        }
+    }
+    
+    handleGameOverMouseMove(e) {
+        // Get the canvas rectangle to calculate relative mouse position
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        // REPLAY button coordinates (same as in drawGameOverScreen)
+        const buttonX = this.canvas.width / 2 - 60;
+        const buttonY = 510;
+        const buttonWidth = 120;
+        const buttonHeight = 35;
+        
+        // Check if mouse is over the REPLAY button area
+        const wasHovering = this.buttonHovered;
+        this.buttonHovered = (x >= buttonX && x <= buttonX + buttonWidth && 
+                             y >= buttonY && y <= buttonY + buttonHeight);
+        
+        // Change cursor style when hovering
+        this.canvas.style.cursor = this.buttonHovered ? 'pointer' : 'default';
+        
+        // Redraw if hover state changed (for visual feedback)
+        if (wasHovering !== this.buttonHovered) {
+            // The game loop will handle the redraw
+        }
     }
     
     generateNextPiece() {
@@ -403,8 +462,8 @@ class PentrisGame {
         this.ctx.fillText(`LEVEL: ${this.level}`, this.canvas.width / 2, 110);
         this.ctx.fillText(`LINES: ${this.lines}`, this.canvas.width / 2, 130);
         
-        // Jeff Goldblum anime-style art
-        this.drawAnimeJeffGoldblum();
+        // Jeff Goldblum image
+        this.drawJeffGoldblumImage();
         
         // Jurassic Park quote (properly wrapped)
         this.ctx.fillStyle = '#ffff00';
@@ -415,12 +474,25 @@ class PentrisGame {
         this.ctx.fillText("they didn't stop to think if they should.", this.canvas.width / 2, 470);
         this.ctx.fillText("- Dr. Ian Malcolm", this.canvas.width / 2, 490);
         
-        // Restart button
-        this.ctx.strokeStyle = '#00ff00';
-        this.ctx.lineWidth = 2;
-        this.ctx.strokeRect(this.canvas.width / 2 - 60, 510, 120, 35);
+        // Restart button with hover effect
+        const buttonX = this.canvas.width / 2 - 60;
+        const buttonY = 510;
+        const buttonWidth = 120;
+        const buttonHeight = 35;
         
-        this.ctx.fillStyle = '#00ff00';
+        // Button background (filled when hovered)
+        if (this.buttonHovered) {
+            this.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+            this.ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+        }
+        
+        // Button border
+        this.ctx.strokeStyle = this.buttonHovered ? '#00ff88' : '#00ff00';
+        this.ctx.lineWidth = this.buttonHovered ? 3 : 2;
+        this.ctx.strokeRect(buttonX, buttonY, buttonWidth, buttonHeight);
+        
+        // Button text
+        this.ctx.fillStyle = this.buttonHovered ? '#00ff88' : '#00ff00';
         this.ctx.font = '16px "Orbitron", "Courier New", monospace';
         this.ctx.fillText('REPLAY', this.canvas.width / 2, 532);
         
@@ -430,155 +502,60 @@ class PentrisGame {
         this.ctx.fillText('Press ENTER or SPACE', this.canvas.width / 2, 565);
     }
     
-    drawAnimeJeffGoldblum() {
-        // Anime-style Jeff Goldblum drawing
-        const centerX = this.canvas.width / 2;
-        const centerY = 280;
-        
-        // Save context for transformations
-        this.ctx.save();
-        
-        // Head shape (anime style - more elongated)
-        this.ctx.fillStyle = '#FDBCB4';
-        this.ctx.beginPath();
-        this.ctx.ellipse(centerX, centerY - 20, 45, 55, 0, 0, 2 * Math.PI);
-        this.ctx.fill();
-        this.ctx.strokeStyle = '#E8A282';
-        this.ctx.lineWidth = 1;
-        this.ctx.stroke();
-        
-        // Iconic curly hair (anime style)
-        this.ctx.fillStyle = '#8B4513';
-        this.ctx.beginPath();
-        // Left curls
-        this.ctx.arc(centerX - 35, centerY - 60, 15, 0, 2 * Math.PI);
-        this.ctx.arc(centerX - 20, centerY - 70, 12, 0, 2 * Math.PI);
-        this.ctx.arc(centerX - 5, centerY - 75, 10, 0, 2 * Math.PI);
-        // Right curls
-        this.ctx.arc(centerX + 5, centerY - 75, 10, 0, 2 * Math.PI);
-        this.ctx.arc(centerX + 20, centerY - 70, 12, 0, 2 * Math.PI);
-        this.ctx.arc(centerX + 35, centerY - 60, 15, 0, 2 * Math.PI);
-        // Top curls
-        this.ctx.arc(centerX - 10, centerY - 65, 8, 0, 2 * Math.PI);
-        this.ctx.arc(centerX + 10, centerY - 65, 8, 0, 2 * Math.PI);
-        this.ctx.fill();
-        
-        // Eyebrows (anime style - expressive)
-        this.ctx.strokeStyle = '#8B4513';
-        this.ctx.lineWidth = 3;
-        this.ctx.beginPath();
-        this.ctx.moveTo(centerX - 25, centerY - 35);
-        this.ctx.quadraticCurveTo(centerX - 15, centerY - 40, centerX - 5, centerY - 35);
-        this.ctx.moveTo(centerX + 5, centerY - 35);
-        this.ctx.quadraticCurveTo(centerX + 15, centerY - 40, centerX + 25, centerY - 35);
-        this.ctx.stroke();
-        
-        // Iconic glasses (anime style)
-        this.ctx.strokeStyle = '#000000';
-        this.ctx.lineWidth = 2;
-        this.ctx.fillStyle = 'rgba(255,255,255,0.1)';
-        // Left lens
-        this.ctx.beginPath();
-        this.ctx.arc(centerX - 15, centerY - 25, 12, 0, 2 * Math.PI);
-        this.ctx.fill();
-        this.ctx.stroke();
-        // Right lens
-        this.ctx.beginPath();
-        this.ctx.arc(centerX + 15, centerY - 25, 12, 0, 2 * Math.PI);
-        this.ctx.fill();
-        this.ctx.stroke();
-        // Bridge
-        this.ctx.beginPath();
-        this.ctx.moveTo(centerX - 3, centerY - 25);
-        this.ctx.lineTo(centerX + 3, centerY - 25);
-        this.ctx.stroke();
-        
-        // Eyes (anime style - large and expressive)
-        this.ctx.fillStyle = '#000000';
-        this.ctx.beginPath();
-        this.ctx.ellipse(centerX - 15, centerY - 25, 8, 6, 0, 0, 2 * Math.PI);
-        this.ctx.ellipse(centerX + 15, centerY - 25, 8, 6, 0, 0, 2 * Math.PI);
-        this.ctx.fill();
-        
-        // Eye highlights (anime style)
-        this.ctx.fillStyle = '#FFFFFF';
-        this.ctx.beginPath();
-        this.ctx.arc(centerX - 12, centerY - 27, 2, 0, 2 * Math.PI);
-        this.ctx.arc(centerX + 18, centerY - 27, 2, 0, 2 * Math.PI);
-        this.ctx.fill();
-        
-        // Nose (anime style - subtle)
-        this.ctx.strokeStyle = '#E8A282';
-        this.ctx.lineWidth = 2;
-        this.ctx.beginPath();
-        this.ctx.moveTo(centerX, centerY - 10);
-        this.ctx.lineTo(centerX - 2, centerY - 5);
-        this.ctx.moveTo(centerX, centerY - 10);
-        this.ctx.lineTo(centerX + 2, centerY - 5);
-        this.ctx.stroke();
-        
-        // Signature Jeff Goldblum smirk (anime style)
-        this.ctx.strokeStyle = '#000000';
-        this.ctx.lineWidth = 2;
-        this.ctx.beginPath();
-        this.ctx.moveTo(centerX - 12, centerY + 5);
-        this.ctx.quadraticCurveTo(centerX, centerY + 10, centerX + 12, centerY + 5);
-        this.ctx.stroke();
-        
-        // Jawline definition (anime style)
-        this.ctx.strokeStyle = '#E8A282';
-        this.ctx.lineWidth = 1;
-        this.ctx.beginPath();
-        this.ctx.moveTo(centerX - 35, centerY + 15);
-        this.ctx.quadraticCurveTo(centerX, centerY + 30, centerX + 35, centerY + 15);
-        this.ctx.stroke();
-        
-        // Neck
-        this.ctx.fillStyle = '#FDBCB4';
-        this.ctx.fillRect(centerX - 15, centerY + 25, 30, 20);
-        
-        // Shirt collar (anime style with shading)
-        const gradient = this.ctx.createLinearGradient(centerX - 40, centerY + 45, centerX + 40, centerY + 85);
-        gradient.addColorStop(0, '#000080');
-        gradient.addColorStop(1, '#000040');
-        this.ctx.fillStyle = gradient;
-        this.ctx.fillRect(centerX - 40, centerY + 45, 80, 40);
-        
-        // Shirt details (anime style highlights)
-        this.ctx.fillStyle = '#4169E1';
-        this.ctx.fillRect(centerX - 35, centerY + 50, 70, 5);
-        this.ctx.fillRect(centerX - 30, centerY + 60, 60, 3);
-        
-        // Anime-style sparkle effects around the character
-        this.ctx.fillStyle = '#FFD700';
-        this.ctx.beginPath();
-        this.ctx.arc(centerX - 60, centerY - 40, 2, 0, 2 * Math.PI);
-        this.ctx.arc(centerX + 55, centerY - 30, 1.5, 0, 2 * Math.PI);
-        this.ctx.arc(centerX - 50, centerY + 20, 1, 0, 2 * Math.PI);
-        this.ctx.arc(centerX + 45, centerY + 10, 1.5, 0, 2 * Math.PI);
-        this.ctx.fill();
-        
-        // Anime-style star sparkles
-        this.drawAnimeStar(centerX - 65, centerY - 45, 3);
-        this.drawAnimeStar(centerX + 60, centerY - 35, 2);
-        this.drawAnimeStar(centerX - 55, centerY + 25, 2.5);
-        
-        // Restore context
-        this.ctx.restore();
-    }
-    
-    drawAnimeStar(x, y, size) {
-        this.ctx.save();
-        this.ctx.translate(x, y);
-        this.ctx.fillStyle = '#FFD700';
-        this.ctx.beginPath();
-        for (let i = 0; i < 5; i++) {
-            this.ctx.lineTo(Math.cos((i * 2 * Math.PI) / 5) * size, Math.sin((i * 2 * Math.PI) / 5) * size);
-            this.ctx.lineTo(Math.cos(((i + 0.5) * 2 * Math.PI) / 5) * size * 0.5, Math.sin(((i + 0.5) * 2 * Math.PI) / 5) * size * 0.5);
+    drawJeffGoldblumImage() {
+        // Load and display the actual Jeff Goldblum image
+        if (!this.jeffGoldblumImage) {
+            this.jeffGoldblumImage = new Image();
+            this.jeffGoldblumImage.onload = () => {
+                // Image loaded, it will be drawn on the next frame
+                this.imageLoaded = true;
+            };
+            this.jeffGoldblumImage.onerror = () => {
+                // If image fails to load, show error message
+                this.imageLoadError = true;
+            };
+            // Set source after setting up event listeners
+            this.jeffGoldblumImage.src = 'assets/jeff-goldblum.jpg';
         }
-        this.ctx.closePath();
-        this.ctx.fill();
-        this.ctx.restore();
+        
+        if (this.imageLoaded) {
+            const centerX = this.canvas.width / 2;
+            const centerY = 280;
+            const imageWidth = 160;
+            const imageHeight = 120;
+            
+            // Draw the image centered
+            this.ctx.drawImage(
+                this.jeffGoldblumImage,
+                centerX - imageWidth / 2,
+                centerY - imageHeight / 2,
+                imageWidth,
+                imageHeight
+            );
+            
+            // Add a subtle frame around the image
+            this.ctx.strokeStyle = '#00ff00';
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(
+                centerX - imageWidth / 2 - 2,
+                centerY - imageHeight / 2 - 2,
+                imageWidth + 4,
+                imageHeight + 4
+            );
+        } else if (this.imageLoadError) {
+            // Show error message if image failed to load
+            this.ctx.fillStyle = '#ff0000';
+            this.ctx.font = '12px "Orbitron", "Courier New", monospace';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText('Image failed to load', this.canvas.width / 2, 270);
+            this.ctx.fillText('Check assets/jeff-goldblum.jpg', this.canvas.width / 2, 290);
+        } else {
+            // Show loading text while image loads
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.font = '16px "Orbitron", "Courier New", monospace';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText('Loading Image...', this.canvas.width / 2, 280);
+        }
     }
     
     drawPixelArt(x, y, pixelSize, pattern) {
