@@ -225,17 +225,11 @@ class PentrisGame {
         const buttonHeight = 35;
         
         // Check if mouse is over the REPLAY button area
-        const wasHovering = this.buttonHovered;
         this.buttonHovered = (x >= buttonX && x <= buttonX + buttonWidth && 
                              y >= buttonY && y <= buttonY + buttonHeight);
         
         // Change cursor style when hovering
         this.canvas.style.cursor = this.buttonHovered ? 'pointer' : 'default';
-        
-        // Redraw if hover state changed (for visual feedback)
-        if (wasHovering !== this.buttonHovered) {
-            // The game loop will handle the redraw
-        }
     }
     
     generateNextPiece() {
@@ -443,8 +437,8 @@ class PentrisGame {
     
     drawGameOverScreen() {
         // Dark overlay
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
         // Futuristic "Game Over" text
         this.ctx.fillStyle = '#00ff00';
@@ -556,16 +550,6 @@ class PentrisGame {
             this.ctx.font = '16px "Orbitron", "Courier New", monospace';
             this.ctx.textAlign = 'center';
             this.ctx.fillText('Loading Image...', this.canvas.width / 2, 280);
-        }
-    }
-    
-    drawPixelArt(x, y, pixelSize, pattern) {
-        for (let row = 0; row < pattern.length; row++) {
-            for (let col = 0; col < pattern[row].length; col++) {
-                if (pattern[row][col] === 1) {
-                    this.ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
-                }
-            }
         }
     }
     
